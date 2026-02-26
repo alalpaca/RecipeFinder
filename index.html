@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Main Container - White Window -->
+        <div class="container">
+            <!-- Header -->
+            <header>
+                <h1>🍽️ Recipe Finder</h1>
+                <p class="subtitle">Search for delicious recipes from around the world</p>
+            </header>
+
+            <!-- Search Section -->
+            <section id="search-section" class="search-section">
+                <div class="search-container">
+                    <div class="search-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="Enter meal name (e.g., Chicken, Pasta, Arrabiata)"
+                            class="search-input"
+                        >
+                    </div>
+                    <button id="search-btn" class="search-btn">Search</button>
+                </div>
+                <div id="error-message" class="error-message" style="display: none;"></div>
+            </section>
+
+            <!-- Initial Results Placeholder -->
+            <section id="initial-results" class="initial-results">
+                <h2 class="results-title">Search Results</h2>
+                <p class="results-placeholder">No recipes found. Try a different search term.</p>
+            </section>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p class="loading-text">Searching for recipes...</p>
+            </div>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <!-- <div id="results-grid" class="results-grid"></div> -->
+                 <h2 class="results-title">Search Results</h2> <div id="results-grid" class="results-grid"></div>
+            </section>
+
+            <!-- Detail Section -->
+            <section id="detail-section" class="detail-section" style="display: none;">
+                <button id="back-btn" class="back-btn">← Back to Results</button>
+                <div id="detail-content" class="detail-content"></div>
+            </section>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

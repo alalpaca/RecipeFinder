@@ -1,0 +1,318 @@
+# AI-Assisted Development Log
+# Recipe Finder SPA - CSCI 571 Assignment 1
+# Student Name: Yunfei Wang
+# Date: 2026-2-20
+
+================================================================================
+Important Notes: 
+All documents sent to AI-assistant are included and submitted in the zip file.
+================================================================================
+
+================================================================================
+SESSION 1: Project Initialization and Environment
+================================================================================
+
+PROMPT 1:
+"Initialize a Recipe_Finder project within the existing conda environment CS571 based on the requirements specified in Recipe_Finder_PRD.md, RF_TECHDESIGN.md, and RF_AGENTS.md."
+
+AI RESPONSE SUMMARY:
+- The AI recognized that this is a **frontend-only SPA**, using only HTML, CSS, vanilla JavaScript, and TheMealDB API, and that no backend server is required.
+- It generated the full project skeleton in an empty folder: `index.html`, `css/styles.css`, `js/app.js`, `Dockerfile`, `nginx.conf`, `.gitignore`, and `README.md`.
+- In HTML it created the main containers: search input + button, results grid, loading indicator, and detail view section. In JS it implemented basic state management, the search endpoint call, the lookup-by-ID call, and view switching.
+- Instead of directly running conda commands, it wrote `setup_env.sh` and `ENVIRONMENT_SETUP.md` to document how I should activate `CS571` and use `python3 -m http.server 8000` to preview the static site locally.
+
+WHAT I LEARNED:
+- This assignment can be completed using **static frontend + third‑party API**, without any Flask/Node backend.
+- A clean structure (`index.html` plus separate `css/`, `js/`, Docker, and NGINX config) is ready to be deployed to NGINX / Cloud Run.
+- When doing a pure frontend project inside a conda environment, Python is mainly needed for a **local static file server**, not for app logic.
+
+ISSUES ENCOUNTERED:
+- At first I was confused by “configure the environment inside conda” and thought I needed a lot of extra dependencies, but the PRD only required the frontend stack and Docker.
+
+HOW I FIXED IT:
+- With the AI’s explanation, I simplified environment setup to: make sure `CS571` has Python 3 and Docker, keep all business logic in the browser, and record the activation + local server commands clearly in `ENVIRONMENT_SETUP.md`.
+
+--------------------------------------------------------------------------------
+
+PROMPT 2:
+"I have already tested the basic functionality locally. Next, strictly follow RP_Layout.md and the provided screenshots to update all page layouts (homepage, loading, search results, detail view, etc.)."
+
+AI RESPONSE SUMMARY:
+- The AI replaced the plain gray background with a **blue‑purple gradient** and centered a large white container with rounded corners and a drop shadow, matching the reference layout.
+- It enhanced the recipe cards with stronger shadows and a hover scale effect to mimic the 3D “pop‑out” feel in the screenshot.
+- In the detail view it parsed `strIngredient1–20` and the corresponding `strMeasure` fields and added a red **“Watch on Youtube”** button that opens the video in a new tab.
+
+WHAT I LEARNED:
+- With `linear-gradient` it’s easy to build a **gradient background**, and then a large white card on top naturally highlights the main content.
+- A small `transform: scale(...)` plus box‑shadow is enough to create a noticeable floating card effect.
+- When dealing with numbered API fields (1–20), using a loop with dynamic property names (like `meal[\`strIngredient${i}\`]`) is much cleaner than writing 20 separate conditions.
+
+ISSUES ENCOUNTERED:
+- The first layout was functionally correct but visually far from the reference UI (background color, card shadows, and overall composition were different).
+
+HOW I FIXED IT:
+- Using RP_Layout.md and the screenshots, I iterated on background, container size, corner radius, and shadow settings until the overall style closely matched the sample, and only then moved on to fine‑tuning the homepage details.
+
+================================================================================
+SESSION 2: Homepage Pixel-Perfect Layout
+================================================================================
+
+PROMPT 3:
+"Refine the homepage: the white page should almost fill the center of the screen (with slightly larger side margins than top/bottom), add a small subtitle under the title, change the search box border to a blue‑purple gradient, and show centered `Search Results` and `No recipes found. Try a different search term.` under the search box."
+
+AI RESPONSE SUMMARY:
+- It adjusted `.app-wrapper` and `.container` padding/width so that the white container fills almost the whole viewport, leaving only a slim margin and slightly larger space on the sides than top/bottom.
+- It inserted a centered subtitle under the header: `Search for delicious recipes from around the world`, in smaller gray text.
+- To create the **gradient border** for the search input, it wrapped the `<input>` in a `search-input-wrapper` that has a gradient background and 2px padding, with the actual input on a white background instead of using `border-image` directly.
+- It added an `initial-results` section on the homepage with two centered lines: bold “Search Results” and a second line “No recipes found. Try a different search term.” styled like the subtitle.
+- In JS it added an `initialResults` DOM reference plus helper functions `showInitialResults()` / `hideInitialResults()` so that:
+  - On first load the user sees the initial placeholder text.
+  - As soon as the user searches, the placeholder hides and either real results or a “no results” message appears.
+
+WHAT I LEARNED:
+- Controlling the **outer layout containers** (instead of hard‑coding fixed widths) is the right way to make a card almost full‑screen while still leaving margins.
+- A gradient wrapper + inner white input is more compatible and easier to control than relying solely on `border-image` for gradient borders.
+- The homepage actually has two different text states (“initial placeholder” and “no results after search”), so the JS needs explicit state handling to switch between them.
+
+ISSUES ENCOUNTERED:
+- The red error message for an empty search was initially left‑aligned with a colored background, not like the screenshot where it appears as a small red line directly under the input.
+- When there were no results, `"No recipes found. Try a different search term."` was rendered inside the results grid area, not in the same centered position and style as the initial placeholder.
+
+HOW I FIXED IT:
+- I updated `.error-message` in CSS to use a transparent background, only red text, and the same max width as the search box so it visually becomes a single red line under the input.
+- I modified `showNoResults()` to both set the `resultsGrid` text and call `hideInitialResults()`, preventing the initial placeholder from overlapping with the runtime no‑results message.
+- I ensured the `initial-results` section always stays centered, keeping the pre‑search and post‑search‑no‑results experiences visually consistent.
+
+--------------------------------------------------------------------------------
+
+PROMPT 4:
+"There are still two homepage layout issues: (1) the red error message for an empty search is not centered; (2) after a failed search, `No recipes found. Try a different search term.` must look exactly the same as the initial line in the layout."
+
+AI RESPONSE SUMMARY:
+- After re‑checking the homepage structure, the AI confirmed that the error and no‑results messages shared some styles but needed more precise alignment adjustments in CSS.
+- It centered the empty‑search error text so it lines up with the search input and the initial results section.
+- It ensured that the styling of the second line in `initial-results` is reused as the template for the runtime “No recipes found” message so both appear on a **single centered line with identical font and color**.
+
+WHAT I LEARNED:
+- Pixel‑perfect frontend work is not only about colors and sizes; **alignment (left/center) and vertical spacing** are just as important.
+- When the same text appears in multiple states, it is better to centralize its styling; otherwise small visual differences become noticeable.
+- When text are rendered within the results-grid, the "Grid" layout affects its centering behavior.
+
+ISSUES ENCOUNTERED:
+- Because I initially focused more on functionality and rough layout, these alignment details were missed and required a second pass with the screenshot open side‑by‑side.
+
+HOW I FIXED IT:
+- Following the AI’s suggestions, I explicitly centered both `.error-message` and the no‑results text and matched their styles to the `initial-results` section, which finally achieved the “one‑to‑one” match with the design.
+
+--------------------------------------------------------------------------------
+
+PROMPT 5:
+"With these two issues resolved, I have a few more questions:
+1. On the Homepage, the search box is too close to the phrase "Search for delicious recipes from around the world."
+2. Add light gray subtitles "Searching for recipes..." below the search loading wheel.
+3. On the search results page: Add a small heading "Search Results" below the search box; make the font of each "recipe" slightly bolder; give the "Category" section a blue-purple button-like border."
+
+AI RESPONSE SUMMARY:
+- Add text to the loading area and remove the previously static initial-results
+- Increase header spacing, enhance category labels, and customize loading text style
+- Adjust the HTML structure within the createMealCard function to ensure the Category tag correctly applies the new style
+
+WHAT I LEARNED:
+- We can add .loading-text to index.html and assigned it a light gray color in CSS to input a new hint line on the page
+- Label Enhancement can be achieved by transforming the .category element from a standard p tag into a badge-like design
+
+ISSUES ENCOUNTERED:
+- Label Button lack of desiging and the search box is too crowded
+
+HOW I FIXED IT:
+- Modify the header and .category and relevant code as AI suggested
+
+--------------------------------------------------------------------------------
+
+Prompt 6:
+"On the search results page, center the layout and increase the size of each recipe. 
+Currently, if fewer than five recipes appear, they align to the left, making the layout look awkward with only three or four results."
+
+AI RESPONSE SUMMARY:
+- Change the grid alignment to center and moderately increase the size of individual cards
+
+WHAT I LEARNED:
+- We can use "justify-content: center" to resolve the issue of the results aligned
+
+ISSUES ENCOUNTERED:
+- The layout look awful with few results
+
+HOW I FIXED IT:
+- Modify "justify-content: center" code as AI suggested
+
+--------------------------------------------------------------------------------
+
+Prompt 7:
+”My recipe cards are positioned too far from the left and right margins. Please help me fix this specific issue.“
+
+AI RESPONSE SUMMARY:
+- In styles.css, reduce the left and right margins of the white background
+- Increase the maximum width of the grid
+- Remove the fixed width of the card itself
+
+WHAT I LEARNED:
+- The padding of the .container acts like an invisible wall, pushing the cards toward the center. Reducing it moves the wall outward
+- "max-width: 1300px" gives the grid more "room to grow," allowing the three cards to spread out more when displayed side by side
+- "width: 100%" ensures the cards will fill the expanded grid space completely, rather than shrinking to the center
+
+ISSUES ENCOUNTERED:
+- Wtihin each row, the left and right cards failed to position close to the white border
+
+HOW I FIXED IT:
+- Reduce left and right padding and modify the grid template
+
+================================================================================
+SESSION 3: Google Cloud Deployment
+================================================================================
+
+Prompt 8:
+"I downloaded the Google Cloud SDK .tar.gz file. I don't understand what to do next."
+
+AI RESPONSE SUMMARY:
+- Explained how to extract the .tar.gz file
+- Guided running ./install.sh inside the extracted folder
+- Advised accepting default .zshrc path
+- Recommended restarting terminal after installation
+
+WHAT I LEARNED:
+- Google Cloud SDK must be manually installed via install.sh on macOS
+- The PATH must be updated for gcloud to work globally
+- Restarting terminal is required for configuration changes
+
+ISSUES ENCOUNTERED:
+- I did not understand how to open terminal inside the folder
+- I was unsure whether to modify the rc file
+
+HOW I FIXED IT:
+- Used Finder → Right-click → “Open in Terminal”
+- Pressed Enter to accept the default .zshrc path
+- Restarted terminal and verified installation using: gcloud --version
+
+--------------------------------------------------------------------------------
+
+PROMPT 9:
+"I created a new project but I don't understand what I should do next."
+
+AI RESPONSE SUMMARY:
+- Explained how to set the active project using gcloud config set project
+- Clarified that billing must be enabled
+- Provided step-by-step commands to enable required APIs
+- Explained difference between build + deploy vs --source deployment
+
+WHAT I LEARNED:
+- A Google Cloud project must be explicitly set in gcloud
+- Cloud Run requires run.googleapis.com and cloudbuild.googleapis.com APIs
+- Billing must be enabled for deployment to succeed
+
+ISSUES ENCOUNTERED:
+- I was unsure if I needed to activate conda
+- I did not know which commands to run first
+
+HOW I FIXED IT:
+- Confirmed conda was not needed, Ran:
+    gcloud config set project NEW_PROJECT_ID
+    gcloud services enable run.googleapis.com cloudbuild.googleapis.com
+
+--------------------------------------------------------------------------------
+
+PROMPT 10:
+"Should I activate my conda environment before deploying from VS Code terminal?"
+
+AI RESPONSE SUMMARY:
+- Clarified that conda is unrelated to Docker or Cloud Run
+- Explained that deployment only depends on gcloud and Docker
+- Emphasized being in the project root directory
+
+WHAT I LEARNED:
+- Cloud Run deployment is independent of Python environments
+- The only requirement is being inside the folder containing Dockerfile
+
+ISSUES ENCOUNTERED:
+- I mistakenly believed conda was required
+
+HOW I FIXED IT:
+- Skipped conda activation
+- Verified project structure using:
+    ls
+- Continued deployment using:
+    gcloud run deploy recipe-finder --source . --platform managed --region us-central1 --allow-unauthenticated
+
+--------------------------------------------------------------------------------
+
+PROMPT 11:
+"I received an error: Project lacks an 'environment' tag. How do I fix this?"
+
+AI RESPONSE SUMMARY:
+- Explained that the error was caused by organization policy requiring environment tags
+- Showed how to check projectNumber and parent
+- Clarified correct tag binding format (tagValues/ID and projects/PROJECT_NUMBER)
+- Suggested creating a new project without organization restrictions if permission issues occur
+
+WHAT I LEARNED:
+- Some GCP projects enforce mandatory tags
+- Tag binding requires project number, not project ID
+- Tag values must use resource format (tagValues/xxx)
+- Organization policies can restrict resource creation
+
+ISSUES ENCOUNTERED:
+- INVALID_ARGUMENT error when binding tag
+- Incorrect use of tag namespaced value format
+- Confusion between project ID and project number
+
+HOW I FIXED IT:
+- Ran:
+    gcloud projects describe PROJECT_ID --format="yaml(projectNumber,parent)"
+- Confirmed projectNumber
+- Attempted proper tag creation and binding
+
+--------------------------------------------------------------------------------
+
+PROMPT 12:
+"How do I finally deploy my SPA to Cloud Run?"
+
+AI RESPONSE SUMMARY:
+- Provided simplified deployment command using --source
+- Explained what happens during build and deployment
+- Clarified that container must listen on port 8080
+- Explained meaning of --allow-unauthenticated
+
+WHAT I LEARNED:
+- Cloud Run automatically builds container when using --source
+- Deployment generates a public HTTPS URL
+- NGINX must listen on port 8080
+- Dockerfile must copy static files correctly
+
+ISSUES ENCOUNTERED:
+- Concern about correct project configuration
+- Uncertainty about build vs deploy commands
+
+HOW I FIXED IT:
+- Used single-step command:
+- gcloud run deploy recipe-finder --source . --platform managed --region us-central1 --allow-unauthenticated
+- Verified deployment URL worked in Chrome
+
+================================================================================
+REFLECTION
+================================================================================
+
+Most useful AI assistance:
+- Quickly creating a complete frontend project structure from the PRD/TECHDESIGN (HTML/CSS/JS + Docker/NGINX).
+- Helping me understand TheMealDB API field structure and parse 20 ingredient fields using a loop with dynamic property access.
+- Providing concrete CSS strategies for pixel‑perfect layout: gradient borders, card shadows, flexbox detail layout, and alignment tweaks.
+- Step-by-step Cloud SDK installation guidance
+- Clear explanation of project configuration and API enabling
+- Debugging environment tag policy errors
+
+What I would do differently:
+- Share UI screenshots and layout documents with the AI from the very beginning to avoid doing two large layout refactors.
+- Sketch each page state (initial, loading, no results, detail) first and then ask the AI to implement styles per state for a more structured workflow.
+- Verify billing and project configuration earlier
+- Confirm organization policy restrictions before deployment
+
+Time spent: ~5–6 hours (including local testing and multiple layout tweaks)
+AI tools used: Cursor, ChatGPT edu, Gemini Pro

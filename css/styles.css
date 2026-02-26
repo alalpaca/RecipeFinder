@@ -1,0 +1,495 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Allow native bounce/rubber band effect when scrolling to bottom */
+html {
+    -webkit-overflow-scrolling: touch;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5a3d8a 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* App Wrapper - Full viewport with gradient */
+.app-wrapper {
+    min-height: 100vh;
+    padding: 30px 80px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Main Container - White Window - Almost full screen */
+.container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: none;
+    padding: 20px 30px;
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 20px 0;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+header .subtitle {
+    color: #7f8c8d;
+    font-size: 1em;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Search Section */
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-container {
+    display: flex;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    padding: 2px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    transition: all 0.3s;
+    background: #fff;
+}
+
+.search-input::placeholder {
+    color: #b0b0b0;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-btn {
+    padding: 14px 28px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+.search-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.search-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Error Message - Red small text below search box */
+.error-message {
+    margin-top: 8px;
+    padding: 0;
+    background: transparent;
+    color: #e74c3c;
+    font-size: 14px;
+    /* text-align: left; */
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Initial Results Placeholder */
+.initial-results {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.initial-results .results-title {
+    color: #2c3e50;
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.initial-results .results-placeholder {
+    color: #7f8c8d;
+    font-size: 1em;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Loading Indicator - Spinner only */
+.loading {
+    text-align: center;
+    padding: 60px 40px;
+}
+
+.loading-text {
+    margin-top: 15px;
+    color: #95a5a6;
+    font-size: 14px;
+}
+
+.spinner {
+    border: 4px solid #e8e8e8;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Results Grid */
+.results-section {
+    margin-top: 30px;
+}
+
+.results-title {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.results-grid {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 0 auto;
+    /* margin-top: 20px; */
+    /* margin: 30px auto 0 auto; */
+    /* margin-left: auto;
+    margin-right: auto; */
+    max-width: none;
+    justify-content: center; 
+}
+
+/* Meal Card - Shadow and 3D effect */
+.meal-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04); */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    width: 100%;
+    /* width: 400px; */
+    max-width: 1400px; 
+    /* margin: 0 auto; */
+}
+
+/* Hover - Slightly enlarge and deeper shadow */
+.meal-card:hover {
+    transform: scale(1.03) translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15), 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.meal-card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+}
+
+.meal-card-info {
+    padding: 10px;
+}
+
+.meal-card-info h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.15em;
+    font-weight: 800;
+}
+
+.meal-card-info .category {
+    display: inline-block;
+    background: #6f6af8; /* 蓝紫色背景 */
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 40px;
+    color: #7f8c8d;
+    font-size: 18px;
+    font-size: 1em;
+}
+
+/* Detail Section */
+.detail-section {
+    margin-top: 30px;
+}
+
+.back-btn {
+    padding: 8px 18px;
+    background-color: white; /* 改为白底 */
+    color: #667eea; /* 改为品牌蓝 */
+    border: 1.5px solid #667eea; /* 蓝色边框 */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.back-btn:hover {
+    background-color: #f8f9ff;
+    transform: translateY(-1px);
+}
+
+.detail-content {
+    background: transparent;
+    padding: 0;
+}
+
+/* Recipe Detail Layout - Image LEFT, Info RIGHT */
+.detail-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.detail-image-col {
+    flex: 0 0 45%;
+    max-width: 1500px;
+}
+
+.detail-image-col img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.detail-info-col {
+    flex: 1;
+    min-width: 280px;
+}
+
+.detail-info-col h2 {
+    color: #2c3e50;
+    font-size: 2.2em;
+    /* margin-bottom: 16px; */
+    font-weight: 800;
+    margin-top: 0;
+
+}
+
+.detail-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.detail-meta span {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+/* 第一个标签 (Category) 设为紫色 */
+.detail-meta span:first-child {
+    background-color: #6f6af8;
+    color: white;
+}
+
+/* 第二个标签 (Area) 设为浅灰色 */
+.detail-meta span:nth-child(2) {
+    background-color: #f0f0f0;
+    color: #7f8c8d;
+}
+
+.ingredients-section {
+    margin-bottom: 28px;
+}
+
+.ingredients-section h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    font-weight: 600;
+    border-bottom: 1px solid #eee; 
+    padding-bottom: 8px;
+}
+
+.ingredients-list {
+    list-style: none;
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px; */
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px;
+}
+
+.ingredients-list li {
+    padding: 10px 14px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: none;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.instructions-section {
+    margin-bottom: 28px;
+}
+
+.instructions-section h3 {
+    color: #2c3e50;
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    font-weight: 600;
+}
+
+.instructions-section p {
+    line-height: 1.8;
+    color: #555;
+    white-space: pre-line;
+    font-size: 0.95em;
+}
+
+/* Red Watch on Youtube Button */
+.youtube-section {
+    margin-top: 32px;
+}
+
+.youtube-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: #ff0000; /* 正红色 */
+    color: white !important;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* 模拟播放图标 */
+.youtube-link::before {
+    content: '▶';
+    font-size: 12px;
+}
+
+.youtube-link:hover {
+    background-color: #c0392b;
+}
+
+/* Bounce damping for scroll - iOS rubber band effect simulation */
+@supports (overflow: overlay) {
+    body {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .app-wrapper {
+        padding: 20px 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-wrapper {
+        padding: 15px 20px;
+    }
+
+    .container {
+        padding: 30px 24px;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .search-input-wrapper {
+        width: 100%;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+    }
+
+    .detail-layout {
+        flex-direction: column;
+    }
+
+    .detail-image-col {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .detail-meta {
+        flex-direction: row;
+    }
+
+    .ingredients-list {
+        grid-template-columns: 1fr;
+    }
+}
